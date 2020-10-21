@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
+import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.PessoaFisica;
 import br.com.communicart.backendserver.model.entity.PessoaJuridica;
@@ -21,6 +22,17 @@ public class PerfilService {
 	public Perfil findById(Long id) {
 		return this.perfilRepository.findById(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id)); //personalizar erro
+	}
+	
+	public Perfil update(Long id, UpdatePerfilDTO perfilDto) {
+		Perfil perfilUsuario = this.findById(id);
+		
+		perfilUsuario.setInteresses(perfilDto.getInteresses());
+		perfilUsuario.setBio(perfilDto.getBio());
+		perfilUsuario.setWebsite(perfilDto.getWebsite());
+		
+		
+		return this.perfilRepository.save(perfilUsuario);
 	}
 	
 	public PessoaFisica createPessoaFísica(CreatePessoaDTO pessoaDto, Long id) {

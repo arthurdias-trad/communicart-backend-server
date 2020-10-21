@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.URL;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -47,4 +49,14 @@ public class Perfil {
 	@Column(nullable = true, length=1000)
 	@Size(max=1000)
 	private String bio;
+	
+	@Column(nullable = true, length=120)
+	@Size(max=120)
+	@URL
+	private String website;
+	
+	@Column(nullable = true, length=600)
+	@Size(max=600)
+	private String interesses;
+	
 }

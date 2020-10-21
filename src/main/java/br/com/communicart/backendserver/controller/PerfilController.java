@@ -1,13 +1,17 @@
 package br.com.communicart.backendserver.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
+import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
 import br.com.communicart.backendserver.model.enums.TipoPessoa;
 import br.com.communicart.backendserver.service.PerfilService;
 import lombok.AllArgsConstructor;
@@ -30,4 +34,13 @@ public class PerfilController {
 		
 		return ResponseEntity.noContent().build();
 	}
+	
+	@PutMapping("/{idPerfil}")
+	public ResponseEntity<Void> update(@PathVariable Long idPerfil, @Valid @RequestBody UpdatePerfilDTO perfilDto) {
+		System.out.println(idPerfil);
+		this.perfilService.update(idPerfil, perfilDto);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
 }
