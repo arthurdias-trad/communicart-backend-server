@@ -1,0 +1,39 @@
+package br.com.communicart.backendserver.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import lombok.AllArgsConstructor;
+
+@EnableWebSecurity
+@AllArgsConstructor
+public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
+	
+	private UserDetailsServiceImpl userService;
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+			.antMatchers("/api/**").authenticated()
+			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and().cors().disable().csrf().disable()
+			.httpBasic();
+	}
+	
+	@Override
+	public void configure(AuthenticationManagerBuilder builder) throws Exception {
+		builder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+}

@@ -1,5 +1,6 @@
 package br.com.communicart.backendserver.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 public class UsuarioService {
 	
 	private final UsuarioRepository usuarioRepository;
+	private final BCryptPasswordEncoder passwordEncoder;
 	
 	public Usuario create(UsuarioDTO usuarioDto) {
 		Usuario usuario = this.fromDTO(usuarioDto);
@@ -35,7 +37,7 @@ public class UsuarioService {
 	public Usuario fromDTO(UsuarioDTO usuarioDto) {
 		Usuario usuario = Usuario.builder()
 				.email(usuarioDto.getEmail())
-				.password(usuarioDto.getPassword())
+				.password(passwordEncoder.encode(usuarioDto.getPassword()))
 				.perfil(Perfil.builder().build())
 				.build();
 		
