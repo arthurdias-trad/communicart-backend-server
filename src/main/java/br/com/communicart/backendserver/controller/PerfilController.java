@@ -37,10 +37,9 @@ public class PerfilController {
 	
 	@PutMapping("/{idPerfil}")
 	public ResponseEntity<Void> update(@PathVariable Long idPerfil, @Valid @RequestBody UpdatePerfilDTO perfilDto) {
-		System.out.println(idPerfil);
 		this.perfilService.update(idPerfil, perfilDto);
 		
 		return ResponseEntity.noContent().build();
-	}
+	} 
 	
 }

@@ -27,6 +27,10 @@ public class PerfilService {
 	public Perfil update(Long id, UpdatePerfilDTO perfilDto) {
 		Perfil perfilUsuario = this.findById(id);
 		
+		if (perfilUsuario.getPF() == null && perfilUsuario.getPJ() == null) {
+			throw new RuntimeException("É necessário cadastrar como a PF ou PJ antes");
+		}
+		
 		perfilUsuario.setInteresses(perfilDto.getInteresses());
 		perfilUsuario.setBio(perfilDto.getBio());
 		perfilUsuario.setWebsite(perfilDto.getWebsite());
