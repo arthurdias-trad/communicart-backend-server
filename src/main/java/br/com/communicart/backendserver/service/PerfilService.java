@@ -2,6 +2,7 @@ package br.com.communicart.backendserver.service;
 
 import org.springframework.stereotype.Service;
 
+import br.com.communicart.backendserver.exception.DataIntegrityException;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
 import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
@@ -21,14 +22,14 @@ public class PerfilService {
 	
 	public Perfil findById(Long id) {
 		return this.perfilRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id)); //personalizar erro
+				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id)); 
 	}
 	
 	public Perfil update(Long id, UpdatePerfilDTO perfilDto) {
 		Perfil perfilUsuario = this.findById(id);
 		
 		if (perfilUsuario.getPF() == null && perfilUsuario.getPJ() == null) {
-			throw new RuntimeException("É necessário cadastrar como a PF ou PJ antes");
+			throw new DataIntegrityException("Para criar um perfil, o usuário deve ter uma PF ou PJ cadastrada");
 		}
 		
 		perfilUsuario.setInteresses(perfilDto.getInteresses());
