@@ -59,4 +59,13 @@ public class Perfil {
 	@Size(max=600)
 	private String interesses;
 	
+	@Column(nullable = true)
+	@OneToOne
+	@JoinColumn(name = "midias_sociais_id")
+	private MidiasSociais midiasSociais;
+	
+	@Column(nullable = true)
+	@OneToOne
+	@JoinColumn(name = "servicos_id")
+	private Servicos servicos;
 }
