@@ -5,6 +5,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
 
+import br.com.communicart.backendserver.model.entity.MidiasSociais;
+import br.com.communicart.backendserver.model.entity.Servicos;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,11 @@ public class UpdatePerfilDTO {
 	private String website;
 	
 	private String[] interesses;
+	
+	private MidiasSociais midiasSociais;
+	
+	private Servicos servicos;
+	
 	
 	public String getInteresses() {
 		return this.interesses.length > 0 ? this.toCSV(this.interesses) : null;
