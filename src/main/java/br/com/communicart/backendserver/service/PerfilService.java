@@ -32,6 +32,14 @@ public class PerfilService {
 			throw new DataIntegrityException("Para criar um perfil, o usuário deve ter uma PF ou PJ cadastrada");
 		}
 		
+		if(perfilUsuario.getServicos() != null) {
+			perfilDto.getServicos().setId(perfilUsuario.getServicos().getId());
+		}
+		
+		if (perfilUsuario.getMidiasSociais() != null) {
+			perfilDto.getMidiasSociais().setId(perfilUsuario.getMidiasSociais().getId());
+		}
+		
 		perfilUsuario.setInteresses(perfilDto.getInteresses());
 		perfilUsuario.setBio(perfilDto.getBio());
 		perfilUsuario.setWebsite(perfilDto.getWebsite());
