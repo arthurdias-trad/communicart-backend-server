@@ -39,7 +39,6 @@ public class UpdatePerfilDTO {
 	
 	private Servicos servicos;
 	
-	
 	public String getInteresses() {
 		return this.interesses.length > 0 ? this.toCSV(this.interesses) : null;
 	}

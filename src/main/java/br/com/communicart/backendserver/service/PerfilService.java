@@ -35,6 +35,9 @@ public class PerfilService {
 		perfilUsuario.setInteresses(perfilDto.getInteresses());
 		perfilUsuario.setBio(perfilDto.getBio());
 		perfilUsuario.setWebsite(perfilDto.getWebsite());
+		perfilUsuario.setMidiasSociais(perfilDto.getMidiasSociais());
+		perfilUsuario.setServicos(perfilDto.getServicos());
+		
 		
 		
 		return this.perfilRepository.save(perfilUsuario);

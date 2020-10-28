@@ -23,13 +23,10 @@ public class UsuarioService {
 		return this.usuarioRepository.save(usuario);
 	}
 	
-	public Usuario findByEmail(String email, String senha) {
+	public Usuario findByEmail(String email) {
 		Usuario usuario = this.usuarioRepository.findByEmail(email)
 					.orElseThrow(() -> new ObjectNotFoundException("Usuário ou senha incorreto"));
-		
-		if (!usuario.getPassword().equals(senha)) {
-			throw new ObjectNotFoundException("Usuário ou senha incorreto");
-		}
+	
 		
 		return usuario;
 	}
