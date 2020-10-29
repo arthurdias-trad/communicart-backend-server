@@ -22,12 +22,15 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+			.antMatchers("/", "/csrf", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
+					"/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-			.antMatchers("/api/**").authenticated()
+			.anyRequest().authenticated()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().cors().disable().csrf().disable()
-			.httpBasic();
+//			.httpBasic();
+			.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil));
 	}
 	
 	@Override

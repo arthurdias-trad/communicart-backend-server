@@ -15,6 +15,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,6 +41,7 @@ public class Perfil implements Serializable {
 	private Long id;
 	
 	@OneToOne(mappedBy = "perfil")
+	@JsonIgnore
 	private Usuario usuario;
 	
 	@OneToOne(cascade = CascadeType.REMOVE)

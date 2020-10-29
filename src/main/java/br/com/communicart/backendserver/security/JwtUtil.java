@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,9 +40,13 @@ public class JwtUtil {
 		Claims claims = this.getClaims(jwt);
 		
 		Long id = claims.get("usrid", Long.class);
+		Long perfilId = claims.get("profid", Long.class);
 			
 		
-		return Usuario.builder().id(id).build();
+		return Usuario.builder()
+				.id(id)
+				.perfil(Perfil.builder().id(perfilId).build())
+				.build();
 	}
 	
 	public Long getProfileId(String token) {
@@ -56,6 +61,9 @@ public class JwtUtil {
 	public boolean validateToken(String token) {
 		Claims claims = getClaims(token);
 		Date agora = new Date(System.currentTimeMillis());
+		
+		System.out.println(claims);
+		System.out.println(claims != null && agora.before(claims.getExpiration()));
 		
 		return claims != null && agora.before(claims.getExpiration());
 	}
