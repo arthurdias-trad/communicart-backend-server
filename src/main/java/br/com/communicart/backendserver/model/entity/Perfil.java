@@ -1,5 +1,7 @@
 package br.com.communicart.backendserver.model.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +32,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Perfil {
+public class Perfil implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +41,7 @@ public class Perfil {
 	private Long id;
 	
 	@OneToOne(mappedBy = "perfil")
+	@JsonIgnore
 	private Usuario usuario;
 	
 	@OneToOne(cascade = CascadeType.REMOVE)
@@ -59,4 +65,11 @@ public class Perfil {
 	@Size(max=600)
 	private String interesses;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "midias_sociais_id", nullable = true)
+	private MidiasSociais midiasSociais;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "servicos_id", nullable = true)
+	private Servicos servicos;
 }
