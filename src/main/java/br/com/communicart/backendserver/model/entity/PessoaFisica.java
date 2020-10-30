@@ -58,4 +58,8 @@ public class PessoaFisica implements Serializable {
 	@JoinColumn(name = "perfil_id")
 	@JsonIgnore
 	private Perfil perfil;
+	
+	public String getNomeCompleto() {
+		return this.nome + " " + this.sobrenome;
+	}
 }
