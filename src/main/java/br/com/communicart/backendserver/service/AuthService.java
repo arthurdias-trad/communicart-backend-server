@@ -2,7 +2,6 @@ package br.com.communicart.backendserver.service;
 
 import javax.validation.Valid;
 
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties.Credential;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.model.dto.UsuarioAuthDTO;
 import br.com.communicart.backendserver.model.entity.AuthResponse;
+import br.com.communicart.backendserver.model.entity.Credential;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Usuario;
 import br.com.communicart.backendserver.security.JwtUtil;
@@ -28,14 +28,14 @@ public class AuthService {
 		
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
-						credential.getUsername(),
+						credential.getEmail(),
 						credential.getPassword()
 				)
 		);
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		Usuario usuario = this.usuarioService.findByEmail(credential.getUsername());
+		Usuario usuario = this.usuarioService.findByEmail(credential.getEmail());
 		Perfil perfil = usuario.getPerfil();
 		
 		String nome = null;
@@ -54,11 +54,11 @@ public class AuthService {
 				.jwt(jwt)
 				.user(UsuarioAuthDTO.builder()
 						.id(usuario.getId())
-						.email(credential.getUsername())
+						.email(credential.getEmail())
 						.nome(nome)
 						.build()
 						)
 				.build();
 	}
-	
+		
 }

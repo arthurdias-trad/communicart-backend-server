@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Builder
+@Getter
 public class Credential {
 
 	@NotNull
-	public String username;
+	public String email;
 	
 	@NotNull
 	public String password;
+
 }
