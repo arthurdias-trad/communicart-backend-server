@@ -28,12 +28,12 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers("/", "/csrf", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
-					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**").permitAll()
-			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
+					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**", "/api/login").permitAll()
+//			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
 			.anyRequest().authenticated()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and().cors().disable().csrf().disable()
+			.and().cors().and().csrf().disable()
 //			.httpBasic();
 			.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil));
 		
@@ -55,14 +55,21 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("https://localhost:8080"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+		configuration.setAllowedMethods(Arrays.asList("POST","GET","DELETE", "PUT", "OPTIONS"));
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+//	@Bean
+//	CorsConfigurationSource corsConfigurationSource() {
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		configuration.setAllowedOrigins(Arrays.asList("https://localhost:8080"));
+//		configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration);
+//		return source;
+//	}
 }
