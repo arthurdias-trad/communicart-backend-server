@@ -41,7 +41,7 @@ public class PerfilController {
 			this.perfilService.createPessoaJuridica(pessoaDto, idPerfil);
 		}
 		
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{idPerfil}")
