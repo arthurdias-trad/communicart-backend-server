@@ -1,6 +1,7 @@
 package br.com.communicart.backendserver.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.communicart.backendserver.exception.DataIntegrityException;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
@@ -50,7 +51,7 @@ public class PerfilService {
 		
 		return this.perfilRepository.save(perfilUsuario);
 	}
-	
+	@Transactional
 	public PessoaFisica createPessoaFísica(CreatePessoaDTO pessoaDto, Long id) {
 		Perfil perfil = this.findById(id);
 		PessoaFisica pf = pessoaFisicaFromDto(pessoaDto, perfil);

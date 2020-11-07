@@ -28,8 +28,8 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers("/", "/csrf", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
-					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**", "/api/login").permitAll()
-//			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
+					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
 			.anyRequest().authenticated()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
