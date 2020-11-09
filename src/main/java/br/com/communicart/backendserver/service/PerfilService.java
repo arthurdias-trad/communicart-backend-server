@@ -64,7 +64,7 @@ public class PerfilService {
 		
 		return pf;
 	}
-	
+	@Transactional
 	public PessoaJuridica createPessoaJuridica (CreatePessoaDTO pessoaDto, Long id) {
 		Perfil perfil = this.findById(id);
 		PessoaJuridica pj = pessoaJuridicaFromDto(pessoaDto, perfil);
