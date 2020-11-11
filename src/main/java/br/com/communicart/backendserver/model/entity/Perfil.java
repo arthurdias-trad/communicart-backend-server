@@ -75,6 +75,6 @@ public class Perfil implements Serializable {
 	@JoinColumn(name = "servicos_id", nullable = true)
 	private Servicos servicos;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "perfil")
 	private List<Vaga> vagas;
 }

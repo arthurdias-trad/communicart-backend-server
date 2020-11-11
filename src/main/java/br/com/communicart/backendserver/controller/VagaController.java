@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.communicart.backendserver.model.dto.CreateVagaDto;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.service.VagaService;
 
@@ -21,7 +22,8 @@ public class VagaController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Vaga create(@Valid @RequestBody Vaga vaga) {
+	public Vaga create(@Valid @RequestBody CreateVagaDto vagaDto) {
+		Vaga vaga = vagaService.toModel(vagaDto);
 		return vagaService.create(vaga);
 	}
 

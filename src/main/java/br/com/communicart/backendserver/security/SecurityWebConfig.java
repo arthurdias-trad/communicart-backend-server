@@ -31,6 +31,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/vagas").permitAll()
 			.anyRequest().authenticated()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().cors().and().csrf().disable()

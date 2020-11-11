@@ -1,6 +1,7 @@
 package br.com.communicart.backendserver.model.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,11 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.communicart.backendserver.model.enums.PaymentType;
+import br.com.communicart.backendserver.model.enums.StatusVaga;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -41,7 +43,6 @@ public class Vaga implements Serializable{
 	@EqualsAndHashCode.Include
 	private Long id;
 	@OneToOne()
-	@JoinColumn(name = "perfil_id")
 	@JsonIgnore
 	private Perfil perfil;
 	@NotBlank
@@ -49,17 +50,18 @@ public class Vaga implements Serializable{
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "type_job_id", nullable = false)
 	private Servicos typeJob;
-	@NotEmpty
+	@NotNull
 	private String description;
-	@NotBlank
-	private Double price;
+	@NotNull
+	private BigDecimal price;
 	@Enumerated(EnumType.STRING)
-	@NotBlank
+	@NotNull
 	private PaymentType paymentType;
 	private Boolean paymentToNegotiate;
-	@NotBlank
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "contact_forms_id")
 	private ContactFormsAvailableForJob contactForms;
+	@Enumerated(EnumType.STRING)
+	private StatusVaga statusVaga;
 	
 }
