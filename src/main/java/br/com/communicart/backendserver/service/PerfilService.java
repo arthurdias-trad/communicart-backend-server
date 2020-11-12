@@ -11,6 +11,7 @@ import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.PessoaFisica;
 import br.com.communicart.backendserver.model.entity.PessoaJuridica;
 import br.com.communicart.backendserver.repository.PerfilRepository;
+import br.com.communicart.backendserver.security.JwtUtil;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -20,10 +21,17 @@ public class PerfilService {
 	private final PerfilRepository perfilRepository;
 	private final PessoaFisicaService pessoaFisicaService;
 	private final PessoaJuridicaService pessoaJuridicaService;
+	private final JwtUtil jwtUtil;
 	
 	public Perfil findById(Long id) {
 		return this.perfilRepository.findById(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id)); 
+	}
+	
+	public boolean validateId(Long id, String header) {
+		String jwt = header.substring(7);
+		
+		return id.equals(jwtUtil.getProfileId(jwt));
 	}
 	
 	public Perfil update(Long id, UpdatePerfilDTO perfilDto) {
@@ -54,6 +62,11 @@ public class PerfilService {
 	@Transactional
 	public PessoaFisica createPessoaFísica(CreatePessoaDTO pessoaDto, Long id) {
 		Perfil perfil = this.findById(id);
+		
+		if(perfil.hasPessoa()) {
+			throw new DataIntegrityException("O perfil já tem uma pessoa física ou jurídica associada");
+		}
+		
 		PessoaFisica pf = pessoaFisicaFromDto(pessoaDto, perfil);
 		
 		pf = this.pessoaFisicaService.create(pf);
@@ -67,6 +80,11 @@ public class PerfilService {
 	@Transactional
 	public PessoaJuridica createPessoaJuridica (CreatePessoaDTO pessoaDto, Long id) {
 		Perfil perfil = this.findById(id);
+		
+		if(perfil.hasPessoa()) {
+			throw new DataIntegrityException("O perfil já tem uma pessoa física ou jurídica associada");
+		}
+		
 		PessoaJuridica pj = pessoaJuridicaFromDto(pessoaDto, perfil);
 		
 		pj = this.pessoaJuridicaService.create(pj);
@@ -95,4 +113,6 @@ public class PerfilService {
 			.perfil(perfil)
 			.build();
 	}
+	
+
 }
