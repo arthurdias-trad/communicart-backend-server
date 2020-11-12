@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.communicart.backendserver.exception.DataIntegrityException;
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
 import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
 import br.com.communicart.backendserver.model.entity.Perfil;
@@ -33,7 +35,11 @@ public class PerfilController {
 	}
 	
 	@PatchMapping("/{idPerfil}")
-	public ResponseEntity<Void> register(@PathVariable Long idPerfil, @RequestBody CreatePessoaDTO pessoaDto) {
+	public ResponseEntity<Void> register(@PathVariable Long idPerfil, @RequestBody CreatePessoaDTO pessoaDto, @RequestHeader (name="Authorization") String authorizationHeader) {
+		
+		if(!this.perfilService.validateId(idPerfil, authorizationHeader)) {
+			throw new DataIntegrityException("Usuário não tem permissão para editar esse perfil");
+		}
 		
 		if (pessoaDto.getTipoPessoa().equals(TipoPessoa.PESSOA_FISICA)) {
 			this.perfilService.createPessoaFísica(pessoaDto, idPerfil);
@@ -45,7 +51,12 @@ public class PerfilController {
 	}
 	
 	@PutMapping("/{idPerfil}")
-	public ResponseEntity<Void> update(@PathVariable Long idPerfil, @Valid @RequestBody UpdatePerfilDTO perfilDto) {
+	public ResponseEntity<Void> update(@PathVariable Long idPerfil, @Valid @RequestBody UpdatePerfilDTO perfilDto, @RequestHeader (name="Authorization") String authorizationHeader) {
+		
+		if(!this.perfilService.validateId(idPerfil, authorizationHeader)) {
+			throw new DataIntegrityException("Usuário não tem permissão para editar esse perfil");
+		}
+		
 		this.perfilService.update(idPerfil, perfilDto);
 		
 		return ResponseEntity.noContent().build();

@@ -51,6 +51,7 @@ public class JwtUtil {
 	
 	public Long getProfileId(String token) {
 		Claims claims = getClaims(token);
+		System.out.println("Claims: " +claims);
 		if (claims != null) {
 			return claims.get("profid", Long.class);
 		}
@@ -61,10 +62,7 @@ public class JwtUtil {
 	public boolean validateToken(String token) {
 		Claims claims = getClaims(token);
 		Date agora = new Date(System.currentTimeMillis());
-		
-		System.out.println(claims);
-		System.out.println(claims != null && agora.before(claims.getExpiration()));
-		
+				
 		return claims != null && agora.before(claims.getExpiration());
 	}
 	
