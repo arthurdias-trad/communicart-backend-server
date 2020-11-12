@@ -72,4 +72,8 @@ public class Perfil implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "servicos_id", nullable = true)
 	private Servicos servicos;
+	
+	public boolean hasPessoa() {
+		return this.PF != null || this.PJ != null;
+	}
 }
