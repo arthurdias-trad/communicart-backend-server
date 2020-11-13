@@ -1,5 +1,7 @@
 package br.com.communicart.backendserver.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -22,6 +24,10 @@ public class VagaService {
 	@Autowired
 	private PerfilRepository perfilRepository;
 
+	public List<Vaga> listar() {
+		return vagaRepository.findAll();
+	}
+	
 	@Transactional
 	public Vaga create(Vaga vaga) {
 		return vagaRepository.save(vaga);
