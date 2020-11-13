@@ -76,6 +76,7 @@ public class Perfil implements Serializable {
 	private Servicos servicos;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "perfil")
+	@JsonIgnore
 	private List<Vaga> vagas;
 	
 	public boolean hasPessoa() {
