@@ -37,7 +37,7 @@ public class Servicos {
 	private boolean redacao;
 	private boolean ilustracao;
 	
-	@OneToOne(mappedBy="midiasSociais")
+	@OneToOne(mappedBy="servicos")
 	@JsonIgnore
 	private Perfil perfil;
 }

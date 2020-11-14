@@ -11,11 +11,12 @@ import org.springframework.stereotype.Repository;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
 import br.com.communicart.backendserver.model.entity.Perfil;
-import br.com.communicart.backendserver.model.entity.Servicos;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
+import br.com.communicart.backendserver.model.enums.TipoServico;
 import br.com.communicart.backendserver.repository.PerfilRepository;
 import br.com.communicart.backendserver.repository.VagaRepository;
+import br.com.communicart.backendserver.security.JwtUtil;
 
 @Repository
 public class VagaService {
@@ -23,6 +24,8 @@ public class VagaService {
 	private VagaRepository vagaRepository;
 	@Autowired
 	private PerfilRepository perfilRepository;
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	public List<Vaga> listar() {
 		return vagaRepository.findAll();
@@ -34,21 +37,17 @@ public class VagaService {
 	}
 
 	@Transactional
-	public Vaga toModel(@Valid CreateVagaDto vagaDto) {
-		Perfil perfil = perfilRepository.findById(vagaDto.getPerfilId())
+	public Vaga toModel(@Valid CreateVagaDto vagaDto, String token) {
+		Long perfilId = jwtUtil.getProfileId(token.substring(7));		
+		
+		Perfil perfil = perfilRepository.findById(perfilId)
 				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: \" + id"));
-		Servicos servicos = Servicos.builder()
-				.design(vagaDto.getTypeJob().isDesign())
-				.edicao(vagaDto.getTypeJob().isEdicao())
-				.fotografia(vagaDto.getTypeJob().isFotografia())
-				.ilustracao(vagaDto.getTypeJob().isIlustracao())
-				.redacao(vagaDto.getTypeJob().isRedacao())
-				.build();
+		
 		
 		Vaga vaga = Vaga.builder()
 				.perfil(perfil)
 				.titleJob(vagaDto.getTitleJob())
-				.typeJob(servicos)
+				.typeJob(TipoServico.toEnum(vagaDto.getTypeJob()))
 				.description(vagaDto.getDescription())
 				.price(vagaDto.getPrice())
 				.paymentType(vagaDto.getPaymentType())

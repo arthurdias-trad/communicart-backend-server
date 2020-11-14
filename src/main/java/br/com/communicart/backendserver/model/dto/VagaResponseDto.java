@@ -21,7 +21,7 @@ public class VagaResponseDto {
 	private Long id;
 	private Long perfilId;
 	private String titleJob;
-	private Servicos typeJob;
+	private String typeJob;
 	private String description;
 	private BigDecimal price;
 	private PaymentType paymentType;
