@@ -15,12 +15,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateVagaDto {
-	@NotNull
-	private Long perfilId;
 	@NotBlank
 	private String titleJob;
 	@NotNull
-	private Servicos typeJob;
+	private int typeJob;
 	@NotEmpty
 	private String description;
 	@NotNull
