@@ -35,10 +35,19 @@ public class VagaController {
 	}
 	
 	@GetMapping
-	public List<VagaResponseDto> listar() {
+	public ResponsiveEntiy<List<VagaResponseDto>> listar() {
 		List<Vaga> vagas = vagaService.listar();
-		return vagas.stream().map(vaga -> toVagaResponseDto(vaga)).collect(Collectors.toList());
+		List<VagaResponseDto> vagasDto = vagas.stream().map(vaga -> toVagaResponseDto(vaga).collect(Collectors.toList()));
+		return ResponseEntity.body(vagasDto);
 	}
+	
+	@GetMapping("/{id}")
+	public ResponsiveEntity<VagaResponseDto> getVagaById (@PathVariable long id) {
+		Vaga vaga = vagaService.findVagaById(id);
+		VagaResponseDto vagaDto = toVagaResponseDto (vaga);
+		return ResponseEntity.ok().body(vagaDto);
+	}
+	
 	
 	private VagaResponseDto toVagaResponseDto(Vaga vaga) {
 		return VagaResponseDto.builder()

@@ -28,6 +28,10 @@ public class VagaService {
 		return vagaRepository.findAll();
 	}
 	
+	public Vaga findVagaById (long id) {
+		return vagaRepository.findById(id);
+	}
+	
 	@Transactional
 	public Vaga create(Vaga vaga) {
 		return vagaRepository.save(vaga);
