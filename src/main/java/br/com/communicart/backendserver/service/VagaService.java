@@ -14,7 +14,6 @@ import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
 import br.com.communicart.backendserver.model.enums.TipoServico;
-import br.com.communicart.backendserver.repository.PerfilRepository;
 import br.com.communicart.backendserver.repository.VagaRepository;
 import br.com.communicart.backendserver.security.JwtUtil;
 
@@ -23,7 +22,7 @@ public class VagaService {
 	@Autowired
 	private VagaRepository vagaRepository;
 	@Autowired
-	private PerfilRepository perfilRepository;
+	private PerfilService perfilService;
 	@Autowired
 	private JwtUtil jwtUtil;
 
@@ -31,8 +30,13 @@ public class VagaService {
 		return vagaRepository.findAll();
 	}
 	
-	public Vaga findVagaById (long id) {
-		return vagaRepository.findById(id);
+	public Vaga findVagaById (Long id) {
+		return vagaRepository.findById(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar vaga com id: \" + id"));
+	}
+	
+	public List<Vaga> findVagasByPerfilId(Long id) {
+		return vagaRepository.findByPerfilId(id);
 	}
 	
 	@Transactional
@@ -42,11 +46,9 @@ public class VagaService {
 
 	@Transactional
 	public Vaga toModel(@Valid CreateVagaDto vagaDto, String token) {
-		Long perfilId = jwtUtil.getProfileId(token.substring(7));		
+		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));		
 		
-		Perfil perfil = perfilRepository.findById(perfilId)
-				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: \" + id"));
-		
+		Perfil perfil = this.perfilService.findById(perfilId);
 		
 		Vaga vaga = Vaga.builder()
 				.perfil(perfil)
