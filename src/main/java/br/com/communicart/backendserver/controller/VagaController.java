@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -34,10 +36,26 @@ public class VagaController {
 	}
 	
 	@GetMapping
-	public List<VagaResponseDto> listar() {
+	public ResponseEntity<List<VagaResponseDto>> listar() {
 		List<Vaga> vagas = vagaService.listar();
-		return vagas.stream().map(vaga -> toVagaResponseDto(vaga)).collect(Collectors.toList());
+		List<VagaResponseDto> vagasDto = vagas.stream().map(vaga -> toVagaResponseDto(vaga)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(vagasDto);
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<VagaResponseDto> findVagaById (@PathVariable Long id) {
+		Vaga vaga = vagaService.findVagaById(id);
+		VagaResponseDto vagaDto = toVagaResponseDto (vaga);
+		return ResponseEntity.ok().body(vagaDto);
+	}
+	
+	@GetMapping("/usuarios/{perfilId}")
+	public ResponseEntity<List<VagaResponseDto>> findVagasByPerfilId(@PathVariable Long perfilId) {
+		List<Vaga> vagas = this.vagaService.findVagasByPerfilId(perfilId);
+		List<VagaResponseDto> vagasDto = vagas.stream().map(vaga -> toVagaResponseDto(vaga)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(vagasDto);
+	}
+	
 	
 	private VagaResponseDto toVagaResponseDto(Vaga vaga) {
 		return VagaResponseDto.builder()
