@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
+import br.com.communicart.backendserver.model.dto.VagaResponseDto;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
@@ -63,5 +64,21 @@ public class VagaService {
 				.build();
 		
 		return vaga;
+	}
+	
+	@Transactional
+	public VagaResponseDto toVagaResponseDto(Vaga vaga) {
+		return VagaResponseDto.builder()
+			.id(vaga.getId())
+			.perfilId(vaga.getPerfil().getId())
+			.titleJob(vaga.getTitleJob())
+			.typeJob(vaga.getTypeJob().getTipo())
+			.description(vaga.getDescription())
+			.price(vaga.getPrice())
+			.paymentType(vaga.getPaymentType())
+			.paymentToNegotiate(vaga.getPaymentToNegotiate())
+			.contactForms(vaga.getContactForms())
+			.statusVaga(vaga.getStatusVaga())
+			.build();
 	}
 }
