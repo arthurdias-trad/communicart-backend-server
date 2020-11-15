@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
@@ -17,7 +17,7 @@ import br.com.communicart.backendserver.model.enums.TipoServico;
 import br.com.communicart.backendserver.repository.VagaRepository;
 import br.com.communicart.backendserver.security.JwtUtil;
 
-@Repository
+@Service
 public class VagaService {
 	@Autowired
 	private VagaRepository vagaRepository;
