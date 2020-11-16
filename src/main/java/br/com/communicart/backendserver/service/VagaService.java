@@ -68,11 +68,21 @@ public class VagaService {
 	
 	@Transactional
 	public VagaResponseDto toVagaResponseDto(Vaga vaga) {
+		String jobOwner;
+		
+		if (vaga.getPerfil().getPF() != null) {
+			jobOwner = vaga.getPerfil().getPF().getNomeCompleto();
+		} else {
+			jobOwner = vaga.getPerfil().getPJ().getNomeFantasia();
+		}
+		
+		
 		return VagaResponseDto.builder()
 			.id(vaga.getId())
 			.perfilId(vaga.getPerfil().getId())
 			.titleJob(vaga.getTitleJob())
 			.typeJob(vaga.getTypeJob().getTipo())
+			.jobOwner(jobOwner)
 			.description(vaga.getDescription())
 			.price(vaga.getPrice())
 			.paymentType(vaga.getPaymentType())
