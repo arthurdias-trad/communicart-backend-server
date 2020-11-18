@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
 import br.com.communicart.backendserver.model.dto.VagaResponseDto;
+import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
 import br.com.communicart.backendserver.model.enums.TipoServico;
+import br.com.communicart.backendserver.repository.ContactFormsAvailableForJobRepository;
 import br.com.communicart.backendserver.repository.VagaRepository;
 import br.com.communicart.backendserver.security.JwtUtil;
 
@@ -24,6 +26,8 @@ public class VagaService {
 	private VagaRepository vagaRepository;
 	@Autowired
 	private PerfilService perfilService;
+	@Autowired
+	private ContactFormsAvailableForJobRepository contactFormsRepository;
 	@Autowired
 	private JwtUtil jwtUtil;
 
@@ -42,6 +46,8 @@ public class VagaService {
 	
 	@Transactional
 	public Vaga create(Vaga vaga) {
+		ContactFormsAvailableForJob contactForms = contactFormsRepository.save(vaga.getContactForms());
+		vaga.setContactForms(contactForms);
 		return vagaRepository.save(vaga);
 	}
 
