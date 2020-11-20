@@ -3,6 +3,7 @@ package br.com.communicart.backendserver.config.aws;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,11 @@ public class AWSS3ServiceImpl {
     private String bucketName;
     
     @Async
-    public String uploadFile(final MultipartFile multipartFile) {
+    public URL uploadFile(final MultipartFile multipartFile) {
         LOGGER.info("File upload in progress.");
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
-            String fileName = uploadFileToS3Bucket(bucketName, file);
+            URL fileName = uploadFileToS3Bucket(bucketName, file);
             LOGGER.info("File upload is completed.");
             file.delete();  // To remove the file locally created in the project folder.
             return fileName;
@@ -52,11 +53,11 @@ public class AWSS3ServiceImpl {
         return file;
     }
     
-    private String uploadFileToS3Bucket(final String bucketName, final File file) {
+    private URL uploadFileToS3Bucket(final String bucketName, final File file) {
         final String uniqueFileName = System.currentTimeMillis() + "_" + file.getName();
         LOGGER.info("Uploading file with name= " + uniqueFileName);
         final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, uniqueFileName, file);
         amazonS3.putObject(putObjectRequest);
-        return uniqueFileName;
+        return amazonS3.getUrl(bucketName, uniqueFileName);
     }
 }

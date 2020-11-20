@@ -1,7 +1,8 @@
 package br.com.communicart.backendserver.controller;
 
+import java.net.URL;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,9 @@ public class ImagesController {
 	private AWSS3ServiceImpl service;
 	
 	@PostMapping
-	public ResponseEntity<String> uploadFile(@RequestPart(value= "file") final MultipartFile multipartFile) {
-        final String name = service.uploadFile(multipartFile);
-        final String response = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully as: " + name;
-        return new ResponseEntity<>(response, HttpStatus.OK);
+	public ResponseEntity<URL> uploadFile(@RequestPart(value= "file") final MultipartFile multipartFile) {
+        final URL url = service.uploadFile(multipartFile);
+        return  ResponseEntity.ok().body(url);
     }
 	
 }
