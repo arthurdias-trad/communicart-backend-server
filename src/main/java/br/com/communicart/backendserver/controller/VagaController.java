@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +32,9 @@ public class VagaController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<Void> create(@Valid @RequestBody CreateVagaDto vagaDto) {
-		Vaga vaga = vagaService.toModel(vagaDto);
-		
+
+	public ResponseEntity<Void> create(@Valid @RequestBody CreateVagaDto vagaDto, @RequestHeader (name="Authorization") String token) {
+		Vaga vaga = vagaService.toModel(vagaDto, token);
 		vaga = vagaService.create(vaga);
 		
 		URI uri = ServletUriComponentsBuilder
@@ -47,23 +49,30 @@ public class VagaController {
 	@GetMapping
 	public ResponseEntity<List<VagaResponseDto>> listar() {
 		List<Vaga> vagas = vagaService.listar();
-		List<VagaResponseDto> vagasDto = vagas.stream().map(vaga -> toVagaResponseDto(vaga)).collect(Collectors.toList());
+		
+		List<VagaResponseDto> vagasDto = vagas.stream()
+				.map(vaga -> this.vagaService.toVagaResponseDto(vaga))
+				.collect(Collectors.toList());
+		
 		return ResponseEntity.ok().body(vagasDto);
 	}
 	
-	private VagaResponseDto toVagaResponseDto(Vaga vaga) {
-		return VagaResponseDto.builder()
-			.id(vaga.getId())
-			.perfilId(vaga.getPerfil().getId())
-			.titleJob(vaga.getTitleJob())
-			.typeJob(vaga.getTypeJob())
-			.description(vaga.getDescription())
-			.price(vaga.getPrice())
-			.paymentType(vaga.getPaymentType())
-			.paymentToNegotiate(vaga.getPaymentToNegotiate())
-			.contactForms(vaga.getContactForms())
-			.statusVaga(vaga.getStatusVaga())
-			.build();
+	@GetMapping("/{id}")
+	public ResponseEntity<VagaResponseDto> findVagaById (@PathVariable Long id) {
+		Vaga vaga = vagaService.findVagaById(id);
+		VagaResponseDto vagaDto = this.vagaService.toVagaResponseDto (vaga);
+		return ResponseEntity.ok().body(vagaDto);
+	}
+	
+	@GetMapping("/usuarios/{perfilId}")
+	public ResponseEntity<List<VagaResponseDto>> findVagasByPerfilId(@PathVariable Long perfilId) {
+		List<Vaga> vagas = this.vagaService.findVagasByPerfilId(perfilId);
+		
+		List<VagaResponseDto> vagasDto = vagas.stream()
+				.map(vaga -> this.vagaService.toVagaResponseDto(vaga))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok().body(vagasDto);
 	}
 
 }

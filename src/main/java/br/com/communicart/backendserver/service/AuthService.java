@@ -53,7 +53,7 @@ public class AuthService {
 		return AuthResponse.builder()
 				.jwt(jwt)
 				.user(UsuarioAuthDTO.builder()
-						.id(usuario.getId())
+						.id(usuario.getPerfil().getId())
 						.email(credential.getEmail())
 						.nome(nome)
 						.build()

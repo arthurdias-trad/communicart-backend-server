@@ -3,7 +3,6 @@ package br.com.communicart.backendserver.model.dto;
 import java.math.BigDecimal;
 
 import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
-import br.com.communicart.backendserver.model.entity.Servicos;
 import br.com.communicart.backendserver.model.enums.PaymentType;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,8 @@ public class VagaResponseDto {
 	private Long id;
 	private Long perfilId;
 	private String titleJob;
-	private Servicos typeJob;
+	private String typeJob;
+	private String jobOwner;
 	private String description;
 	private BigDecimal price;
 	private PaymentType paymentType;

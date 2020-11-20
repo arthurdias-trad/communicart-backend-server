@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,6 +49,20 @@ public class GlobalExceptionHandler {
 				.status(HttpStatus.NOT_FOUND.value()).build();
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseError);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ResponseError> badCredentials(BadCredentialsException exception, HttpServletRequest request) {
+		
+		ResponseError responseError = ResponseError.builder()
+				.timestamp(System.currentTimeMillis())
+				.name("Credenciais incorretas")
+				.message("Não foi possível encontrar o usuário ou a senha")
+				.path(request.getRequestURI())
+				.status(HttpStatus.UNAUTHORIZED.value())
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseError);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

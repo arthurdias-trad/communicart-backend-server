@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.communicart.backendserver.model.enums.PaymentType;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
+import br.com.communicart.backendserver.model.enums.TipoServico;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -47,9 +48,8 @@ public class Vaga implements Serializable{
 	private Perfil perfil;
 	@NotBlank
 	private String titleJob;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "type_job_id", nullable = false)
-	private Servicos typeJob;
+	@Enumerated(EnumType.STRING)
+	private TipoServico typeJob;
 	@NotNull
 	private String description;
 	@NotNull
