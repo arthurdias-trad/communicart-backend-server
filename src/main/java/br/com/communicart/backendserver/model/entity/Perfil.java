@@ -67,6 +67,9 @@ public class Perfil implements Serializable {
 	@Size(max=600)
 	private String interesses;
 	
+	@Column(nullable = true)
+	private java.net.URL imageURL; 
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "midias_sociais_id", nullable = true)
 	private MidiasSociais midiasSociais;

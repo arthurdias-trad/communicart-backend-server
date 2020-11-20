@@ -17,27 +17,32 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import br.com.communicart.backendserver.service.PerfilService;
+
 @Service
 public class AWSS3ServiceImpl {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AWSS3ServiceImpl.class);
 	 
+	@Autowired
+	private PerfilService perfilService;
     @Autowired
     private AmazonS3 amazonS3;
     @Value("${aws.s3.bucket}")
     private String bucketName;
     
     @Async
-    public URL uploadFile(final MultipartFile multipartFile) {
+    public URL uploadFile(final MultipartFile multipartFile, String header) {
         LOGGER.info("File upload in progress.");
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
-            URL fileName = uploadFileToS3Bucket(bucketName, file);
+            URL fileURL = uploadFileToS3Bucket(bucketName, file);
             LOGGER.info("File upload is completed.");
             file.delete();  // To remove the file locally created in the project folder.
-            return fileName;
+            perfilService.saveImage(header, fileURL);
+            return fileURL;
         } catch (final AmazonServiceException ex) {
-            LOGGER.info("File upload is failed.");
+            LOGGER.info("File upload has failed.");
             LOGGER.error("Error= {} while uploading file.", ex.getMessage());
             return null;
         }
