@@ -2,6 +2,7 @@ package br.com.communicart.backendserver.model.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -43,25 +45,43 @@ public class Vaga implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
+	
 	@OneToOne()
 	@JsonIgnore
 	private Perfil perfil;
+	
 	@NotBlank
 	private String titleJob;
+	
 	@Enumerated(EnumType.STRING)
 	private TipoServico typeJob;
+	
 	@NotNull
 	private String description;
+	
 	@NotNull
 	private BigDecimal price;
+	
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private PaymentType paymentType;
+	
 	private Boolean paymentToNegotiate;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "contact_forms_id")
 	private ContactFormsAvailableForJob contactForms;
+	
 	@Enumerated(EnumType.STRING)
 	private StatusVaga statusVaga;
+	
+	// Representa qual o candidato escolhido para realizar um job
+	@OneToOne
+	@JsonIgnore
+	private Perfil selectedFreelancer;
+	
+	//Freelancer que se candidataram a uma vaga
+	@OneToMany(mappedBy = "vaga")
+	private List<VagasCandidaturas> candidaturas;
 	
 }

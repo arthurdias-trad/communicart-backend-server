@@ -7,7 +7,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
-import br.com.communicart.backendserver.model.entity.Servicos;
 import br.com.communicart.backendserver.model.enums.PaymentType;
 import lombok.Getter;
 import lombok.Setter;
