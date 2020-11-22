@@ -37,7 +37,7 @@ public class VagaService {
 	
 	public Vaga findVagaById (Long id) {
 		return vagaRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar vaga com id: \" + id"));
+				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar vaga com id: " + id));
 	}
 	
 	public List<Vaga> findVagasByPerfilId(Long id) {
