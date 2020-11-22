@@ -78,9 +78,20 @@ public class Perfil implements Serializable {
 	@JoinColumn(name = "servicos_id", nullable = true)
 	private Servicos servicos;
 
+	//Vagas que o usuario criou como contratante
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "perfil")
 	@JsonIgnore
-	private List<Vaga> vagas;
+	private List<Vaga> vagasCadastradas;
+	
+	//Vagas que o usuario se candidatou
+	@OneToMany(mappedBy = "perfil")
+	@JsonIgnore
+	private List<VagasCandidaturas> candidaturas;
+	
+	//Trabalhos em que o usuario foi selecionado para realizar
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "selectedFreelancer")
+	@JsonIgnore
+	private List<Vaga> meuTrabalhos;
 	
 	public boolean hasPessoa() {
 		return this.PF != null || this.PJ != null;
