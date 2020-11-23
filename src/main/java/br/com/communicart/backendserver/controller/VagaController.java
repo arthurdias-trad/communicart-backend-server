@@ -45,6 +45,7 @@ public class VagaController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
+
 	public ResponseEntity<Void> create(@Valid @RequestBody CreateVagaDto vagaDto, @RequestHeader (name="Authorization") String token) {
 		Vaga vaga = vagaService.toModel(vagaDto, token);
 		vaga = vagaService.create(vaga);
