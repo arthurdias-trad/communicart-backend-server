@@ -17,6 +17,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import br.com.communicart.backendserver.model.enums.FileType;
 import br.com.communicart.backendserver.service.PerfilService;
 
 @Service
@@ -28,18 +29,23 @@ public class AWSS3ServiceImpl {
 	private PerfilService perfilService;
     @Autowired
     private AmazonS3 amazonS3;
-    @Value("${aws.s3.bucket}")
-    private String bucketName;
+    @Value("${aws.s3.bucket.images}")
+    private String imagesBucketName;
+    @Value("${aws.s3.bucket.files}")
+    private String filesBucketName;
     
     @Async
-    public URL uploadFile(final MultipartFile multipartFile, String header) {
+    public URL uploadFile(final MultipartFile multipartFile, String header, FileType fileType) {
         LOGGER.info("File upload in progress.");
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
+            String bucketName = fileType.equals(FileType.IMAGE) ? this.imagesBucketName : this.filesBucketName;
             URL fileURL = uploadFileToS3Bucket(bucketName, file);
             LOGGER.info("File upload is completed.");
-            file.delete();  // To remove the file locally created in the project folder.
-            perfilService.saveImage(header, fileURL);
+            file.delete();
+            if (fileType.equals(FileType.IMAGE)) {
+            	perfilService.saveImage(header, fileURL);
+            }         
             return fileURL;
         } catch (final AmazonServiceException ex) {
             LOGGER.info("File upload has failed.");

@@ -12,18 +12,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.communicart.backendserver.config.aws.AWSS3ServiceImpl;
+import br.com.communicart.backendserver.model.enums.FileType;
 
 @RestController
-@RequestMapping("/api/images")
-public class ImagesController {
+@RequestMapping("/api/awss3")
+public class AWSS3Controller {
 
 	@Autowired
 	private AWSS3ServiceImpl service;
 
-	@PostMapping
+	@PostMapping("/images")
+	public ResponseEntity<URL> uploadImage(@RequestPart(value = "file") final MultipartFile multipartFile,
+			@RequestHeader(name = "Authorization") String authorizationHeader) {
+		final URL url = service.uploadFile(multipartFile, authorizationHeader, FileType.IMAGE);
+		return ResponseEntity.ok().body(url);
+	}
+	
+	@PostMapping("/files")
 	public ResponseEntity<URL> uploadFile(@RequestPart(value = "file") final MultipartFile multipartFile,
 			@RequestHeader(name = "Authorization") String authorizationHeader) {
-		final URL url = service.uploadFile(multipartFile, authorizationHeader);
+		final URL url = service.uploadFile(multipartFile, authorizationHeader, FileType.DOCUMENT);
 		return ResponseEntity.ok().body(url);
 	}
 
