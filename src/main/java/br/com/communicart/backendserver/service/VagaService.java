@@ -76,11 +76,21 @@ public class VagaService {
 	public VagaResponseDto toVagaResponseDto(Vaga vaga) {
 		String jobOwner;
 		
+		
+		
+//		if (vaga.getPerfil().getPF() != null) {
+//			jobOwner = vaga.getPerfil().getPF().getNomeCompleto();
+//		} else {
+//			jobOwner = vaga.getPerfil().getPJ().getNomeFantasia();
+//		}
 		if (vaga.getPerfil().getPF() != null) {
 			jobOwner = vaga.getPerfil().getPF().getNomeCompleto();
-		} else {
+		} else if (vaga.getPerfil().getPJ() != null) {
 			jobOwner = vaga.getPerfil().getPJ().getNomeFantasia();
+		} else {
+			jobOwner = "";
 		}
+
 		
 		
 		return VagaResponseDto.builder()
