@@ -37,6 +37,8 @@ public class UpdatePerfilDTO {
 	
 	private MidiasSociais midiasSociais;
 	
+	private java.net.URL imageURL; 
+	
 	private Servicos servicos;
 	
 	public String getInteresses() {

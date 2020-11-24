@@ -5,7 +5,6 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,16 +21,14 @@ public class AWSS3Controller {
 	private AWSS3ServiceImpl service;
 
 	@PostMapping("/images")
-	public ResponseEntity<URL> uploadImage(@RequestPart(value = "file") final MultipartFile multipartFile,
-			@RequestHeader(name = "Authorization") String authorizationHeader) {
-		final URL url = service.uploadFile(multipartFile, authorizationHeader, FileType.IMAGE);
+	public ResponseEntity<URL> uploadImage(@RequestPart(value = "file") final MultipartFile multipartFile) {
+		final URL url = service.uploadFile(multipartFile, FileType.IMAGE);
 		return ResponseEntity.ok().body(url);
 	}
 	
 	@PostMapping("/files")
-	public ResponseEntity<URL> uploadFile(@RequestPart(value = "file") final MultipartFile multipartFile,
-			@RequestHeader(name = "Authorization") String authorizationHeader) {
-		final URL url = service.uploadFile(multipartFile, authorizationHeader, FileType.DOCUMENT);
+	public ResponseEntity<URL> uploadFile(@RequestPart(value = "file") final MultipartFile multipartFile) {
+		final URL url = service.uploadFile(multipartFile, FileType.DOCUMENT);
 		return ResponseEntity.ok().body(url);
 	}
 

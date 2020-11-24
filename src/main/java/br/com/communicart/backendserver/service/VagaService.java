@@ -67,6 +67,7 @@ public class VagaService {
 				.paymentToNegotiate(vagaDto.getPaymentToNegotiate())
 				.contactForms(vagaDto.getContactForms())
 				.statusVaga(StatusVaga.ATIVA)
+				.fileURL(vagaDto.getFileURL())
 				.build();
 		
 		return vaga;
