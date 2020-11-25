@@ -1,6 +1,7 @@
 package br.com.communicart.backendserver.controller;
 
 import java.net.URI;
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,6 +29,7 @@ import br.com.communicart.backendserver.model.dto.CreateVagaDto;
 import br.com.communicart.backendserver.model.dto.VagaResponseDto;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
+import br.com.communicart.backendserver.model.enums.StatusVaga;
 import br.com.communicart.backendserver.security.JwtUtil;
 import br.com.communicart.backendserver.service.PerfilService;
 import br.com.communicart.backendserver.service.VagaService;
@@ -99,6 +103,26 @@ public class VagaController {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateStatus(@RequestParam String statusUpdate, @PathVariable Long id, @RequestHeader (name="Authorization") String token){
+		Vaga vaga = vagaService.findVagaById(id);
+		
+		if(statusUpdate.equals("BLOQUEADA")) {
+			vaga.setStatusVaga(StatusVaga.BLOQUEADA);			
+			vagaService.updateStatus(vaga);
+			return ResponseEntity.ok().build();
+		}else if(statusUpdate.equals("ATIVA")) {
+			vaga.setStatusVaga(StatusVaga.ATIVA);
+			vagaService.updateStatus(vaga);
+			return ResponseEntity.ok().build();
+		}else {
+			System.out.println("status: "+statusUpdate);
+			throw new InvalidParameterException(statusUpdate + " não é reconhceido como um status.");
+		}
+		
+			
+	}
 	
 	@GetMapping("/usuarios/{perfilId}")
 	public ResponseEntity<List<VagaResponseDto>> findVagasByPerfilId(@PathVariable Long perfilId) {
@@ -110,5 +134,6 @@ public class VagaController {
 		
 		return ResponseEntity.ok().body(vagasDto);
 	}
+	
 
 }

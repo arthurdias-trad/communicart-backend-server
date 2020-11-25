@@ -50,6 +50,11 @@ public class VagaService {
 		vaga.setContactForms(contactForms);
 		return vagaRepository.save(vaga);
 	}
+	
+	@Transactional
+	public void updateStatus(Vaga vaga) {
+		vagaRepository.save(vaga);
+	}
 
 	@Transactional
 	public Vaga toModel(@Valid CreateVagaDto vagaDto, String token) {
