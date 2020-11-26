@@ -103,6 +103,7 @@ public class VagaController {
 	@GetMapping("/usuarios/{perfilId}")
 	public ResponseEntity<List<VagaResponseDto>> findVagasByPerfilId(@PathVariable Long perfilId) {
 		List<Vaga> vagas = this.vagaService.findVagasByPerfilId(perfilId);
+		System.out.println(vagas);
 		
 		List<VagaResponseDto> vagasDto = vagas.stream()
 				.map(vaga -> this.vagaService.toVagaResponseDto(vaga))

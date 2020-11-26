@@ -1,6 +1,7 @@
 package br.com.communicart.backendserver.model.dto;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
 import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
 import br.com.communicart.backendserver.model.enums.PaymentType;
@@ -27,7 +28,9 @@ public class VagaResponseDto {
 	private PaymentType paymentType;
 	private Boolean paymentToNegotiate;
 	private ContactFormsAvailableForJob contactForms;
-	private StatusVaga statusVaga;	
+	private StatusVaga statusVaga;
+	private URL fileURL;
+	private String paymentDate;
 }
 	
 	

@@ -29,5 +29,8 @@ public class CreateVagaDto {
 	private URL fileURL;
 	@NotNull
 	private ContactFormsAvailableForJob contactForms;
+	
+	private Long paymentDate;
+	
 }
 		

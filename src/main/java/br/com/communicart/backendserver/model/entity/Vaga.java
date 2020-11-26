@@ -3,6 +3,7 @@ package br.com.communicart.backendserver.model.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -67,6 +68,9 @@ public class Vaga implements Serializable{
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private PaymentType paymentType;
+	
+	@Column(nullable = true, name = "payment_date")
+	private Date paymentDate;
 	
 	private Boolean paymentToNegotiate;
 	
