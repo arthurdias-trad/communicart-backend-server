@@ -18,15 +18,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import br.com.communicart.backendserver.model.enums.FileType;
-import br.com.communicart.backendserver.service.PerfilService;
 
 @Service
 public class AWSS3ServiceImpl {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AWSS3ServiceImpl.class);
 	 
-	@Autowired
-	private PerfilService perfilService;
     @Autowired
     private AmazonS3 amazonS3;
     @Value("${aws.s3.bucket.images}")
@@ -35,7 +32,7 @@ public class AWSS3ServiceImpl {
     private String filesBucketName;
     
     @Async
-    public URL uploadFile(final MultipartFile multipartFile, String header, FileType fileType) {
+    public URL uploadFile(final MultipartFile multipartFile, FileType fileType) {
         LOGGER.info("File upload in progress.");
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
@@ -43,9 +40,6 @@ public class AWSS3ServiceImpl {
             URL fileURL = uploadFileToS3Bucket(bucketName, file);
             LOGGER.info("File upload is completed.");
             file.delete();
-            if (fileType.equals(FileType.IMAGE)) {
-            	perfilService.saveImage(header, fileURL);
-            }         
             return fileURL;
         } catch (final AmazonServiceException ex) {
             LOGGER.info("File upload has failed.");

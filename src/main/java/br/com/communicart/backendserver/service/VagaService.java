@@ -1,5 +1,8 @@
 package br.com.communicart.backendserver.service;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -57,6 +60,8 @@ public class VagaService {
 		
 		Perfil perfil = this.perfilService.findById(perfilId);
 		
+		
+		
 		Vaga vaga = Vaga.builder()
 				.perfil(perfil)
 				.titleJob(vagaDto.getTitleJob())
@@ -67,6 +72,8 @@ public class VagaService {
 				.paymentToNegotiate(vagaDto.getPaymentToNegotiate())
 				.contactForms(vagaDto.getContactForms())
 				.statusVaga(StatusVaga.ATIVA)
+				.fileURL(vagaDto.getFileURL())
+				.paymentDate(vagaDto.getPaymentDate() == null ? null : new Date(vagaDto.getPaymentDate()))
 				.build();
 		
 		return vaga;
@@ -82,6 +89,15 @@ public class VagaService {
 			jobOwner = vaga.getPerfil().getPJ().getNomeFantasia();
 		}
 		
+		String dateString;
+		
+		if (vaga.getPaymentDate() != null) {
+			Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+			dateString = formatter.format(vaga.getPaymentDate());
+		} else {
+			dateString = null;
+		}
+		
 		
 		return VagaResponseDto.builder()
 			.id(vaga.getId())
@@ -93,8 +109,10 @@ public class VagaService {
 			.price(vaga.getPrice())
 			.paymentType(vaga.getPaymentType())
 			.paymentToNegotiate(vaga.getPaymentToNegotiate())
+			.paymentDate(dateString)
 			.contactForms(vaga.getContactForms())
 			.statusVaga(vaga.getStatusVaga())
+			.fileURL(vaga.getFileURL())
 			.build();
 	}
 }

@@ -2,9 +2,12 @@ package br.com.communicart.backendserver.model.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -66,7 +69,13 @@ public class Vaga implements Serializable{
 	@NotNull
 	private PaymentType paymentType;
 	
+	@Column(nullable = true, name = "payment_date")
+	private Date paymentDate;
+	
 	private Boolean paymentToNegotiate;
+	
+	@Column(nullable = true, name = "file_url")
+	private URL fileURL;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "contact_forms_id")

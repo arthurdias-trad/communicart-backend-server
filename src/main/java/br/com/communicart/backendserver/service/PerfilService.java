@@ -1,7 +1,5 @@
 package br.com.communicart.backendserver.service;
 
-import java.net.URL;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,19 +55,11 @@ public class PerfilService {
 		perfilUsuario.setWebsite(perfilDto.getWebsite());
 		perfilUsuario.setMidiasSociais(perfilDto.getMidiasSociais());
 		perfilUsuario.setServicos(perfilDto.getServicos());
+		perfilUsuario.setImageURL(perfilDto.getImageURL());
 		
 		return this.perfilRepository.save(perfilUsuario);
 	}
-	
-	@Transactional
-	public void saveImage(String header, URL imageURL) {
-		Perfil perfilUsuario = this.findById(jwtUtil.getProfileId(header.substring(7)));
 		
-		perfilUsuario.setImageURL(imageURL);
-		
-		this.perfilRepository.save(perfilUsuario);
-	}
-	
 	@Transactional
 	public PessoaFisica createPessoaFísica(CreatePessoaDTO pessoaDto, Long id) {
 		Perfil perfil = this.findById(id);

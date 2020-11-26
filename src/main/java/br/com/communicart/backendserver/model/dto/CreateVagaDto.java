@@ -1,6 +1,7 @@
 package br.com.communicart.backendserver.model.dto;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -25,7 +26,11 @@ public class CreateVagaDto {
 	@NotNull
 	private PaymentType paymentType;
 	private Boolean paymentToNegotiate;
+	private URL fileURL;
 	@NotNull
 	private ContactFormsAvailableForJob contactForms;
+	
+	private Long paymentDate;
+	
 }
 		

@@ -67,7 +67,7 @@ public class Perfil implements Serializable {
 	@Size(max=600)
 	private String interesses;
 	
-	@Column(nullable = true)
+	@Column(nullable = true, name = "image_url")
 	private java.net.URL imageURL; 
 	
 	@OneToOne(cascade = CascadeType.ALL)
