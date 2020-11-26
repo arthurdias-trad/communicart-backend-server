@@ -29,11 +29,12 @@ import br.com.communicart.backendserver.model.dto.CreateVagaDto;
 import br.com.communicart.backendserver.model.dto.VagaResponseDto;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
+import br.com.communicart.backendserver.model.entity.VagaCandidatura;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
 import br.com.communicart.backendserver.security.JwtUtil;
 import br.com.communicart.backendserver.service.PerfilService;
 import br.com.communicart.backendserver.service.VagaService;
-import br.com.communicart.backendserver.service.VagasCandidaturasService;
+import br.com.communicart.backendserver.service.VagaCandidaturaService;
 
 @RestController
 @RequestMapping("/api/vagas")
@@ -45,7 +46,7 @@ public class VagaController {
 	@Autowired
 	private PerfilService perfilService;
 	@Autowired
-	private VagasCandidaturasService vagasCandidaturasService;
+	private VagaCandidaturaService vagaCandidaturaService;
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -99,7 +100,7 @@ public class VagaController {
 			return ResponseEntity.badRequest().body(responseError);
 		}
 		
-		vagasCandidaturasService.salvarCandidatura(vaga, perfil, proposta);
+		vagaCandidaturaService.salvarCandidatura(vaga, perfil, proposta);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -110,11 +111,11 @@ public class VagaController {
 		
 		if(statusUpdate.equals("BLOQUEADA")) {
 			vaga.setStatusVaga(StatusVaga.BLOQUEADA);			
-			vagaService.updateStatus(vaga);
+			vagaService.update(vaga);
 			return ResponseEntity.ok().build();
 		}else if(statusUpdate.equals("ATIVA")) {
 			vaga.setStatusVaga(StatusVaga.ATIVA);
-			vagaService.updateStatus(vaga);
+			vagaService.update(vaga);
 			return ResponseEntity.ok().build();
 		}else {
 			System.out.println("status: "+statusUpdate);
@@ -122,6 +123,20 @@ public class VagaController {
 		}
 		
 			
+	}
+	
+	@GetMapping("/{idVaga}/candidatos")
+	public ResponseEntity<List<Perfil>> listarCandidatosPorVaga(@RequestParam Long idVaga){
+		List<Perfil> candidatos = vagaCandidaturaService.findAllCandidatosByVagaId(idVaga);
+		
+		return ResponseEntity.ok(candidatos);
+	}
+	
+	@GetMapping("/candidatura/{idCandidatura}")
+	public ResponseEntity<VagaCandidatura> listarPropostaCandidato(@PathVariable Long idCandidatura){
+		VagaCandidatura proposta = vagaCandidaturaService.findById(idCandidatura);
+		
+		return ResponseEntity.ok(proposta);
 	}
 	
 	@GetMapping("/usuarios/{perfilId}")
@@ -133,6 +148,17 @@ public class VagaController {
 				.collect(Collectors.toList());
 		
 		return ResponseEntity.ok().body(vagasDto);
+	}
+	
+	//Rota selecionar candidato a uma vaga. Implementado usando o id da tabela vaga_candidatura
+	@PatchMapping("{id}/selecionar_candidato")
+	public ResponseEntity<Void> selecionarCandidato(@RequestParam Long vagaCandidaturaId, @RequestHeader(name = "Authorization") String token){
+//		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));		
+//		Perfil perfil = this.perfilService.findById(perfilId);
+		
+		vagaCandidaturaService.selecionarCandidatoAVaga(vagaCandidaturaId);
+		
+		return ResponseEntity.ok().build();
 	}
 	
 

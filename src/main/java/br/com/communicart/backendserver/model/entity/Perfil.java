@@ -86,7 +86,7 @@ public class Perfil implements Serializable {
 	//Vagas que o usuario se candidatou
 	@OneToMany(mappedBy = "perfil")
 	@JsonIgnore
-	private List<VagasCandidaturas> candidaturas;
+	private List<VagaCandidatura> candidaturas;
 	
 	//Trabalhos em que o usuario foi selecionado para realizar
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "selectedFreelancer")

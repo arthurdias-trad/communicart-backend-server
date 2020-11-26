@@ -52,7 +52,7 @@ public class VagaService {
 	}
 	
 	@Transactional
-	public void updateStatus(Vaga vaga) {
+	public void update(Vaga vaga) {
 		vagaRepository.save(vaga);
 	}
 
