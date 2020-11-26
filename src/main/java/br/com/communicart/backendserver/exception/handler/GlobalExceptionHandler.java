@@ -1,5 +1,6 @@
 package br.com.communicart.backendserver.exception.handler;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,19 @@ public class GlobalExceptionHandler {
 				.status(HttpStatus.UNAUTHORIZED.value()).build();
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseError);
+	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<ResponseError> invalidParameterException(InvalidParameterException exception, HttpServletRequest request){
+		ResponseError responseError = ResponseError.builder()
+				.message(exception.getMessage())
+				.name("Parametro inválido")
+				.path(request.getRequestURI())
+				.status(HttpStatus.BAD_REQUEST.value())
+				.timestamp(System.currentTimeMillis())
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseError);
 	}
 
 	@ExceptionHandler(ObjectNotFoundException.class)

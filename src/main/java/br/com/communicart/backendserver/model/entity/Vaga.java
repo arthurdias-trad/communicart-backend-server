@@ -91,6 +91,6 @@ public class Vaga implements Serializable{
 	
 	//Freelancer que se candidataram a uma vaga
 	@OneToMany(mappedBy = "vaga")
-	private List<VagasCandidaturas> candidaturas;
+	private List<VagaCandidatura> candidaturas;
 	
 }
