@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,17 @@ public class VagaController {
 		return ResponseEntity.ok().body(vagasDto);
 	}
 	
+	@GetMapping("listByStatus")
+	public ResponseEntity<List<VagaResponseDto>> listarByStatus(@RequestParam StatusVaga statusVaga){
+		List<Vaga> vagas = vagaService.listarByStatus(statusVaga);
+		
+		List<VagaResponseDto> vagasDto = vagas.stream()
+				.map(vaga -> this.vagaService.toVagaResponseDto(vaga))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(vagasDto);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<VagaResponseDto> findVagaById (@PathVariable Long id) {
 		Vaga vaga = vagaService.findVagaById(id);
@@ -120,9 +132,7 @@ public class VagaController {
 		}else {
 			System.out.println("status: "+statusUpdate);
 			throw new InvalidParameterException(statusUpdate + " não é reconhceido como um status.");
-		}
-		
-			
+		}			
 	}
 	
 	@GetMapping("/{idVaga}/candidatos")
@@ -161,5 +171,30 @@ public class VagaController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PatchMapping("{idVagaCandidatura}/concluirVaga")
+	@Transactional
+	public ResponseEntity<Void> concluirVaga(@PathVariable Long idVagaCandidatura, @RequestParam int rateContratante){
+		VagaCandidatura vagaCandidatura = vagaCandidaturaService.findById(idVagaCandidatura);
+		
+		vagaCandidatura.setRateContratante(rateContratante);
+		vagaCandidaturaService.update(vagaCandidatura);
+		
+		Vaga vaga = vagaService.findVagaById(vagaCandidatura.getVaga().getId());
+		vaga.setStatusVaga(StatusVaga.CONCLUIDA);
+		vagaService.update(vaga);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	@PatchMapping("{idVagaCandidatura}/setRateFreela")
+	public ResponseEntity<Void> cadastrarRateFreelancer(@PathVariable Long idVagaCandidatura, @RequestParam int rateFreelancer){
+		VagaCandidatura vagaCandidatura = vagaCandidaturaService.findById(idVagaCandidatura);
+		
+		vagaCandidatura.setRateContratante(rateFreelancer);
+		vagaCandidaturaService.update(vagaCandidatura);
+		
+		
+		return ResponseEntity.ok().build();
+	}
 
 }

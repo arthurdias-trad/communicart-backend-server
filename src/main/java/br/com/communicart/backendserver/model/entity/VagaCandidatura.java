@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -57,4 +59,10 @@ public class VagaCandidatura implements Serializable{
 	
 	@NotBlank
 	private String observations;
+	
+	@Max(5) @Min(1)
+	private int rateFreela;
+	
+	@Max(5) @Min(1)
+	private int rateContratante;
 }
