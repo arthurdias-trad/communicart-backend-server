@@ -38,6 +38,10 @@ public class VagaService {
 		return vagaRepository.findAll();
 	}
 	
+	public List<Vaga> listarByStatus(StatusVaga statusVaga){
+		return vagaRepository.findByStatusVaga(statusVaga);
+	}
+	
 	public Vaga findVagaById (Long id) {
 		return vagaRepository.findById(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar vaga com id: " + id));

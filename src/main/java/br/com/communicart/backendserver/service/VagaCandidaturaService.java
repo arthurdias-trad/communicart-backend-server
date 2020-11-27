@@ -73,4 +73,8 @@ public class VagaCandidaturaService {
 	
 		return proposta;
 	}
+
+	public void update(VagaCandidatura vagaCandidatura) {
+		vagaCandidaturaRepository.save(vagaCandidatura);
+	}
 }
