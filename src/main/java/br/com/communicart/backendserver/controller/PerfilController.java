@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.communicart.backendserver.exception.UserNotAuthorizedException;
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
+import br.com.communicart.backendserver.model.dto.PerfilResponseDTO;
 import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.enums.TipoPessoa;
@@ -28,10 +29,11 @@ public class PerfilController {
 	private final PerfilService perfilService;
 	
 	@GetMapping("/{idPerfil}")
-	public ResponseEntity<Perfil> findById(@PathVariable Long idPerfil) {
+	public ResponseEntity<PerfilResponseDTO> findById(@PathVariable Long idPerfil) {
 		Perfil perfil = this.perfilService.findById(idPerfil);
+		PerfilResponseDTO perfilDto = this.perfilService.toPerfilDto(perfil);
 		
-		return ResponseEntity.ok(perfil);
+		return ResponseEntity.ok(perfilDto);
 	}
 	
 	@PatchMapping("/{idPerfil}")
