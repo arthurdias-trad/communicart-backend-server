@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.communicart.backendserver.exception.DataIntegrityException;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreatePessoaDTO;
+import br.com.communicart.backendserver.model.dto.PerfilResponseDTO;
 import br.com.communicart.backendserver.model.dto.UpdatePerfilDTO;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.PessoaFisica;
@@ -24,8 +25,9 @@ public class PerfilService {
 	private final JwtUtil jwtUtil;
 	
 	public Perfil findById(Long id) {
-		return this.perfilRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id)); 
+		Perfil perfil = this.perfilRepository.findById(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Não foi possível encontrar perfil com id: " + id));
+		return perfil;
 	}
 	
 	public boolean validateId(Long id, String header) {
@@ -113,6 +115,38 @@ public class PerfilService {
 			.nomeRepresentante(pessoaDto.getNomeRepresentante())
 			.perfil(perfil)
 			.build();
+	}
+	
+	public PerfilResponseDTO toPerfilDto(Perfil perfil) {
+		String nome;
+		String nomeRepresentante;
+		String tipo;
+		
+		if (perfil.getPF() != null) {
+			nome = perfil.getPF().getNomeCompleto();
+			tipo = "Pessoa Física";
+			nomeRepresentante = null;
+		} else {
+			nome = perfil.getPJ().getNomeFantasia();
+			tipo = "Pessoa Jurídica";
+			nomeRepresentante = perfil.getPJ().getNomeRepresentante();
+		}
+		
+		
+		
+		PerfilResponseDTO perfilDto = PerfilResponseDTO.builder()
+				.bio(perfil.getBio())
+				.nome(nome)
+				.nomeRepresentante(nomeRepresentante)
+				.type(tipo)
+				.website(perfil.getWebsite())
+				.midiasSociais(perfil.getMidiasSociais())
+				.servicos(perfil.getServicos())
+				.interesses(perfil.getInteresses())
+				.imageURL(perfil.getImageURL())
+				.build();
+		
+		return perfilDto;
 	}
 	
 
