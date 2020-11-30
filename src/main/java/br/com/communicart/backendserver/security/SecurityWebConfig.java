@@ -29,7 +29,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/", "/csrf", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
 					"/configuration/**", "/swagger-ui.html", "/webjars/**", "/h2-console/**").permitAll()
-			.antMatchers(HttpMethod.POST, "/api/images").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/validate").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
 			.antMatchers("/api/vagas**").permitAll()

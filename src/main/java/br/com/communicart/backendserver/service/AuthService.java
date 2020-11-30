@@ -61,4 +61,7 @@ public class AuthService {
 				.build();
 	}
 		
+	public Boolean validateToken(String authHeader) {
+		return this.jwtUtil.validateToken(authHeader.substring(7));
+	}
 }

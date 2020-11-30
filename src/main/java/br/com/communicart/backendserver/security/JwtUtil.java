@@ -51,7 +51,6 @@ public class JwtUtil {
 	
 	public Long getProfileId(String token) {
 		Claims claims = getClaims(token);
-		System.out.println("Claims: " +claims);
 		if (claims != null) {
 			return claims.get("profid", Long.class);
 		}
