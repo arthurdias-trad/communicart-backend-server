@@ -102,7 +102,7 @@ public class VagaController {
 		Perfil perfil = this.perfilService.findById(perfilId);
 		Vaga vaga = vagaService.findVagaById(id);
 		
-		if(id == perfilId) {
+		if(vaga.getPerfil().getId() == perfilId) {
 			ResponseError responseError = ResponseError.builder().message("O usuário não pode se candidatar a uma vaga criada por ele mesmo.")
 			.path("/api/vagas/"+id+"/candidatarse")
 			.name("BAD REQUEST")
@@ -187,6 +187,18 @@ public class VagaController {
 				.collect(Collectors.toList());
 		
 		return ResponseEntity.ok().body(vagasDto);
+	}
+	
+	@GetMapping("/candidaturas/freelancer")
+	public ResponseEntity<List<VagaResponseDto>> findCandidaturasById(@RequestHeader (name="Authorization") String token){
+		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));
+		List<VagaCandidatura> candidaturas = this.vagaCandidaturaService.findByPerfil(perfilId);
+		
+		List<VagaResponseDto> vagasDto = candidaturas.stream()
+				.map(candidatura -> this.vagaService.toVagaResponseDto(candidatura.getVaga()))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(vagasDto);
 	}
 	
 	//Rota selecionar candidato a uma vaga. Implementado usando o id da tabela vaga_candidatura

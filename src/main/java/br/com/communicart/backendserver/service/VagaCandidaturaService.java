@@ -20,6 +20,8 @@ public class VagaCandidaturaService {
 	@Autowired
 	private VagaCandidaturaRepository vagaCandidaturaRepository;
 	@Autowired
+	private PerfilService perfilService;
+	@Autowired
 	private VagaService vagaService;
 	
 	public VagaCandidatura salvarCandidatura(Vaga vaga, Perfil perfil, CandidaturaVagaDto proposta) {
@@ -82,5 +84,10 @@ public class VagaCandidaturaService {
 		Vaga vaga = vagaService.findVagaById(idVaga);
 		List<VagaCandidatura> candidaturasPorVaga = vagaCandidaturaRepository.findByVaga(vaga);
 		return candidaturasPorVaga;
+	}
+	
+	public List<VagaCandidatura> findByPerfil(Long perfilId) {
+		Perfil perfil = this.perfilService.findById(perfilId);
+		return this.vagaCandidaturaRepository.findByPerfil(perfil);
 	}
 }

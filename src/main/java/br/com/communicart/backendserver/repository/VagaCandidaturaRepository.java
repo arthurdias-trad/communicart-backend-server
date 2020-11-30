@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.entity.VagaCandidatura;
 
@@ -14,6 +15,8 @@ public interface VagaCandidaturaRepository extends JpaRepository<VagaCandidatura
 //	VagaCandidatura findByIdAndPerfilId(@Param("vagaId") Long vagaId, @Param("perfilId") Long perfilId);
 	
 	List<VagaCandidatura> findByVaga(Vaga vaga);
+	
+	List<VagaCandidatura> findByPerfil(Perfil perfil);
 	
 	
 }
