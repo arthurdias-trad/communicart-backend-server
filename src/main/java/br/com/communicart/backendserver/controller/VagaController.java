@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.exception.handler.ResponseError;
 import br.com.communicart.backendserver.model.dto.CandidaturaVagaDto;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
@@ -136,20 +137,47 @@ public class VagaController {
 	}
 	
 	@GetMapping("/{idVaga}/candidatos")
-	public ResponseEntity<List<Perfil>> listarCandidatosPorVaga(@RequestParam Long idVaga){
+	public ResponseEntity<List<Perfil>> listarCandidatosPorVaga(@PathVariable Long idVaga){
 		List<Perfil> candidatos = vagaCandidaturaService.findAllCandidatosByVagaId(idVaga);
 		
 		return ResponseEntity.ok(candidatos);
 	}
+
+	@GetMapping("/{idVaga}/candidaturas")
+	public ResponseEntity<List<VagaCandidatura>> listarPropostasPorVaga(@PathVariable Long idVaga){
+		List<VagaCandidatura> candidaturasPorVaga = vagaCandidaturaService.findAllByVagaId(idVaga);
+		return ResponseEntity.ok(candidaturasPorVaga);
+	}
 	
-	@GetMapping("/candidatura/{idCandidatura}")
-	public ResponseEntity<VagaCandidatura> listarPropostaCandidato(@PathVariable Long idCandidatura){
+	@GetMapping("{idVaga}/candidaturas/{idPerfil}")
+	public ResponseEntity<VagaCandidatura> listarPropostaPorPerfilId(@PathVariable Long idVaga, @PathVariable Long idPerfil){
+		List<VagaCandidatura> candidaturasPorVaga = vagaCandidaturaService.findAllByVagaId(idVaga);
+		Perfil perfil = perfilService.findById(idPerfil);
+		VagaCandidatura vagaCandidatura = candidaturasPorVaga.stream()
+				.filter(candidatura -> candidatura.getPerfil().equals(perfil))
+				.findAny()
+				.orElseThrow(() -> new ObjectNotFoundException("Candidatura relacionada à vaga não encontrada"));
+		
+		return ResponseEntity.ok(vagaCandidatura);
+	}
+	
+	@GetMapping("/candidaturas/{idCandidatura}")
+	public ResponseEntity<VagaCandidatura> listarProposta (@PathVariable Long idCandidatura){
 		VagaCandidatura proposta = vagaCandidaturaService.findById(idCandidatura);
 		
 		return ResponseEntity.ok(proposta);
 	}
 	
-	@GetMapping("/usuarios/{perfilId}")
+	@GetMapping("/candidaturas/{idCandidatura}/perfilCandidato")
+	public ResponseEntity<Perfil> listarPerfilPorProposta(@PathVariable Long idCandidatura){
+		VagaCandidatura proposta = vagaCandidaturaService.findById(idCandidatura);
+		
+		Perfil perfil = proposta.getPerfil();
+		
+		return ResponseEntity.ok(perfil);
+	}
+	
+	@GetMapping("usuarios/{perfilId}")
 	public ResponseEntity<List<VagaResponseDto>> findVagasByPerfilId(@PathVariable Long perfilId) {
 		List<Vaga> vagas = this.vagaService.findVagasByPerfilId(perfilId);
 		

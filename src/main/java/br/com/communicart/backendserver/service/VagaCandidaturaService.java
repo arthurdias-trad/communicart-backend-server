@@ -77,4 +77,10 @@ public class VagaCandidaturaService {
 	public void update(VagaCandidatura vagaCandidatura) {
 		vagaCandidaturaRepository.save(vagaCandidatura);
 	}
+
+	public List<VagaCandidatura> findAllByVagaId(Long idVaga) {
+		Vaga vaga = vagaService.findVagaById(idVaga);
+		List<VagaCandidatura> candidaturasPorVaga = vagaCandidaturaRepository.findByVaga(vaga);
+		return candidaturasPorVaga;
+	}
 }
