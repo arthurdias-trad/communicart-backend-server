@@ -18,5 +18,6 @@ public interface VagaCandidaturaRepository extends JpaRepository<VagaCandidatura
 	
 	List<VagaCandidatura> findByPerfil(Perfil perfil);
 	
+	VagaCandidatura findByPerfilAndVaga(Perfil perfil, Vaga vaga);
 	
 }
