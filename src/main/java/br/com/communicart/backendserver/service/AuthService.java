@@ -45,7 +45,7 @@ public class AuthService {
 			nome = perfil.getPF().getNomeCompleto();
 		}
 		if (perfil.getPJ() != null) {
-			nome = perfil.getPJ().getNomeFantasia();
+			nome = perfil.getPJ().getNomeRepresentante() + ", " + perfil.getPJ().getNomeFantasia();
 		}
 		
 		

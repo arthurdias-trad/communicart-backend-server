@@ -201,12 +201,13 @@ public class VagaController {
 	}
 	
 	@GetMapping("/candidaturas/freelancer")
-	public ResponseEntity<List<VagaResponseDto>> findCandidaturasById(@RequestHeader (name="Authorization") String token){
+	public ResponseEntity<List<VagaResponseDto>> findCandidaturasByIdAndStatus(@RequestHeader (name="Authorization") String token, @RequestParam String statusVaga){
 		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));
 		List<VagaCandidatura> candidaturas = this.vagaCandidaturaService.findByPerfil(perfilId);
 		
 		List<VagaResponseDto> vagasDto = candidaturas.stream()
 				.map(candidatura -> this.vagaService.toVagaResponseDto(candidatura.getVaga()))
+				.filter(vaga -> vaga.getStatusVaga().toString().equals(statusVaga))
 				.collect(Collectors.toList());
 		
 		return ResponseEntity.ok(vagasDto);
