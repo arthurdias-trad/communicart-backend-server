@@ -52,7 +52,6 @@ public class VagaController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-
 	public ResponseEntity<Void> create(@Valid @RequestBody CreateVagaDto vagaDto, @RequestHeader (name="Authorization") String token) {
 		Vaga vaga = vagaService.toModel(vagaDto, token);
 		vaga = vagaService.create(vaga);
@@ -189,6 +188,18 @@ public class VagaController {
 		return ResponseEntity.ok().body(vagasDto);
 	}
 	
+	@GetMapping("contratante/{perfilId}")
+	public ResponseEntity<List<VagaResponseDto>> findVagasContratanteByPerfilIdAndStatus(@PathVariable Long perfilId, @RequestParam String statusVaga){
+		List<Vaga> vagas = this.vagaService.findVagasByPerfilId(perfilId);
+		
+		List<VagaResponseDto> vagasDto = vagas.stream()
+				.filter(vaga-> vaga.getStatusVaga().toString().equals(statusVaga))
+				.map(vaga -> this.vagaService.toVagaResponseDto(vaga))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok().body(vagasDto);
+	}
+	
 	@GetMapping("/candidaturas/freelancer")
 	public ResponseEntity<List<VagaResponseDto>> findCandidaturasById(@RequestHeader (name="Authorization") String token){
 		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));
@@ -202,8 +213,8 @@ public class VagaController {
 	}
 	
 	//Rota selecionar candidato a uma vaga. Implementado usando o id da tabela vaga_candidatura
-	@PatchMapping("{id}/selecionar_candidato")
-	public ResponseEntity<Void> selecionarCandidato(@RequestParam Long vagaCandidaturaId, @RequestHeader(name = "Authorization") String token){
+	@PatchMapping("/selecionar_candidato/{vagaCandidaturaId}")
+	public ResponseEntity<Void> selecionarCandidato(@PathVariable Long vagaCandidaturaId, @RequestHeader(name = "Authorization") String token){
 //		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));		
 //		Perfil perfil = this.perfilService.findById(perfilId);
 		
