@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CandidaturaVagaDto;
+import br.com.communicart.backendserver.model.dto.VagaResponseDto;
 import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.entity.Vaga;
 import br.com.communicart.backendserver.model.entity.VagaCandidatura;
@@ -25,16 +26,19 @@ public class VagaCandidaturaService {
 	private VagaService vagaService;
 	
 	public VagaCandidatura salvarCandidatura(Vaga vaga, Perfil perfil, CandidaturaVagaDto proposta) {
-		VagaCandidatura vagasCandidaturas = VagaCandidatura.builder()
-		.perfil(perfil)
-		.vaga(vaga)
-		.registeredAt(LocalDateTime.now())
-		.price(proposta.getPrice())
-		.observations(proposta.getObservations())
-		.deliveryDate(proposta.getDeliveryDate())
-		.build();
-		
-		return vagaCandidaturaRepository.save(vagasCandidaturas);
+		if (this.vagaCandidaturaRepository.findByPerfilAndVaga(perfil, vaga) == null) {
+			VagaCandidatura vagasCandidatura = VagaCandidatura.builder()
+					.perfil(perfil)
+					.vaga(vaga)
+					.registeredAt(LocalDateTime.now())
+					.price(proposta.getPrice())
+					.observations(proposta.getObservations())
+					.deliveryDate(proposta.getDeliveryDate())
+					.build();
+					
+					return vagaCandidaturaRepository.save(vagasCandidatura);
+		}
+		return null;
 	}
 	
 	public VagaCandidatura findById(Long id) {
@@ -86,8 +90,15 @@ public class VagaCandidaturaService {
 		return candidaturasPorVaga;
 	}
 	
-	public List<VagaCandidatura> findByPerfil(Long perfilId) {
+	public List<VagaResponseDto> findByPerfilAndStatusVaga(Long perfilId, StatusVaga statusVaga) {
 		Perfil perfil = this.perfilService.findById(perfilId);
-		return this.vagaCandidaturaRepository.findByPerfil(perfil);
+		List<VagaCandidatura> candidaturas = this.vagaCandidaturaRepository.findByPerfil(perfil);
+
+		List<VagaResponseDto> vagasDto = candidaturas.stream()
+				.map(candidatura -> this.vagaService.toVagaResponseDto(candidatura.getVaga()))
+				.filter(vaga -> vaga.getStatusVaga().equals(statusVaga))
+				.collect(Collectors.toList());
+		
+		return vagasDto;
 	}
 }

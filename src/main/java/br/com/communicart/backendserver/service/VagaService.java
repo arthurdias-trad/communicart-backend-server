@@ -132,6 +132,7 @@ public class VagaService {
 			.contactForms(vaga.getContactForms())
 			.statusVaga(vaga.getStatusVaga())
 			.fileURL(vaga.getFileURL())
+			.selectedFreelancer(vaga.getSelectedFreelancer())
 			.build();
 	}
 }

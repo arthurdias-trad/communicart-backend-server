@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.communicart.backendserver.exception.DataIntegrityException;
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.exception.handler.ResponseError;
 import br.com.communicart.backendserver.model.dto.CandidaturaVagaDto;
@@ -111,8 +112,12 @@ public class VagaController {
 			
 			return ResponseEntity.badRequest().body(responseError);
 		}
+			
+		VagaCandidatura vagaCandidatura = vagaCandidaturaService.salvarCandidatura(vaga, perfil, proposta);
 		
-		vagaCandidaturaService.salvarCandidatura(vaga, perfil, proposta);
+		if (vagaCandidatura == null) {
+			throw new DataIntegrityException("O usuário não pode se candidatar duas vezes à mesma vaga");
+		}
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -201,14 +206,9 @@ public class VagaController {
 	}
 	
 	@GetMapping("/candidaturas/freelancer")
-	public ResponseEntity<List<VagaResponseDto>> findCandidaturasByIdAndStatus(@RequestHeader (name="Authorization") String token, @RequestParam String statusVaga){
+	public ResponseEntity<List<VagaResponseDto>> findCandidaturasByIdAndStatus(@RequestHeader (name="Authorization") String token, @RequestParam StatusVaga statusVaga){
 		Long perfilId = this.jwtUtil.getProfileId(token.substring(7));
-		List<VagaCandidatura> candidaturas = this.vagaCandidaturaService.findByPerfil(perfilId);
-		
-		List<VagaResponseDto> vagasDto = candidaturas.stream()
-				.map(candidatura -> this.vagaService.toVagaResponseDto(candidatura.getVaga()))
-				.filter(vaga -> vaga.getStatusVaga().toString().equals(statusVaga))
-				.collect(Collectors.toList());
+		List<VagaResponseDto> vagasDto = this.vagaCandidaturaService.findByPerfilAndStatusVaga(perfilId, statusVaga);
 		
 		return ResponseEntity.ok(vagasDto);
 	}

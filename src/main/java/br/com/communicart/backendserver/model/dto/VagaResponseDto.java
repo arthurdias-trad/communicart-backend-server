@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 
 import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
+import br.com.communicart.backendserver.model.entity.Perfil;
 import br.com.communicart.backendserver.model.enums.PaymentType;
 import br.com.communicart.backendserver.model.enums.StatusVaga;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class VagaResponseDto {
 	private StatusVaga statusVaga;
 	private URL fileURL;
 	private String paymentDate;
+	private Perfil selectedFreelancer;
 }
 	
 	
