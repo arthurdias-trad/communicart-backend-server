@@ -224,15 +224,19 @@ public class VagaController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PatchMapping("{idVagaCandidatura}/concluirVaga")
+	@PatchMapping("{idVaga}/concluirVaga")
 	@Transactional
-	public ResponseEntity<Void> concluirVaga(@PathVariable Long idVagaCandidatura, @RequestParam int rateContratante){
-		VagaCandidatura vagaCandidatura = vagaCandidaturaService.findById(idVagaCandidatura);
+	public ResponseEntity<Void> concluirVaga(@PathVariable Long idVaga, @RequestParam int rateContratante){
+		List<VagaCandidatura> vagaCandidaturas = vagaCandidaturaService.findAllByVagaId(idVaga);
+		Vaga vaga = vagaService.findVagaById(idVaga);
+				
+		VagaCandidatura vagaCandidaturaConcluir = vagaCandidaturas.stream()
+				.filter(vagaCandidatura -> vagaCandidatura.getPerfil().equals(vaga.getSelectedFreelancer()))
+				.findFirst().orElseThrow(() -> new ObjectNotFoundException("Candidadura não encontrada"));
 		
-		vagaCandidatura.setRateContratante(rateContratante);
-		vagaCandidaturaService.update(vagaCandidatura);
+		vagaCandidaturaConcluir.setRateContratante(rateContratante);
+		vagaCandidaturaService.update(vagaCandidaturaConcluir);
 		
-		Vaga vaga = vagaService.findVagaById(vagaCandidatura.getVaga().getId());
 		vaga.setStatusVaga(StatusVaga.CONCLUIDA);
 		vagaService.update(vaga);
 		
