@@ -132,8 +132,6 @@ public class PerfilService {
 			nomeRepresentante = perfil.getPJ().getNomeRepresentante();
 		}
 		
-		
-		
 		PerfilResponseDTO perfilDto = PerfilResponseDTO.builder()
 				.bio(perfil.getBio())
 				.nome(nome)
