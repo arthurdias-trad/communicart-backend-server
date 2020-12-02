@@ -243,13 +243,19 @@ public class VagaController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PatchMapping("{idVagaCandidatura}/setRateFreela")
-	public ResponseEntity<Void> cadastrarRateFreelancer(@PathVariable Long idVagaCandidatura, @RequestParam int rateFreelancer){
-		VagaCandidatura vagaCandidatura = vagaCandidaturaService.findById(idVagaCandidatura);
+	@PatchMapping("{idVaga}/setRateFreela")
+	public ResponseEntity<Void> cadastrarRateFreelancer(@PathVariable Long idVaga, @RequestParam int rateFreelancer){
+		List<VagaCandidatura> vagaCandidaturas = vagaCandidaturaService.findAllByVagaId(idVaga);
+		Vaga vaga = vagaService.findVagaById(idVaga);
 		
-		vagaCandidatura.setRateContratante(rateFreelancer);
+		Perfil selectedFreelancer = vaga.getSelectedFreelancer();
+		
+		VagaCandidatura vagaCandidatura = vagaCandidaturas.stream()
+			.filter(vagaCandidatur -> vagaCandidatur.getPerfil().equals(selectedFreelancer))
+			.findFirst().orElseThrow(() -> new ObjectNotFoundException("Candidadura não encontrada"));
+		
+		vagaCandidatura.setRateFreela(rateFreelancer);
 		vagaCandidaturaService.update(vagaCandidatura);
-		
 		
 		return ResponseEntity.ok().build();
 	}
