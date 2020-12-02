@@ -68,8 +68,14 @@ public class Perfil implements Serializable {
 	private String interesses;
 	
 	@Column(nullable = true, name = "image_url")
-	private java.net.URL imageURL; 
+	private java.net.URL imageURL;
 	
+	@Column(nullable = true, name = "rates_freelance")
+	private String ratesFreelancer;
+	
+	@Column(nullable = true, name = "rates_contratante")
+	private String ratesContratante;
+		
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "midias_sociais_id", nullable = true)
 	private MidiasSociais midiasSociais;
@@ -95,5 +101,5 @@ public class Perfil implements Serializable {
 	
 	public boolean hasPessoa() {
 		return this.PF != null || this.PJ != null;
-	}
+	}	
 }
