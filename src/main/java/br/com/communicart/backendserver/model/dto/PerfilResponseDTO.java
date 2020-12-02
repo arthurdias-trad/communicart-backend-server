@@ -16,6 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class PerfilResponseDTO {
+	private Long id;
 	private String nome;
 	private String nomeRepresentante;
 	private String bio;

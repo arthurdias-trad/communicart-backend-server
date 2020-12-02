@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.communicart.backendserver.exception.ObjectNotFoundException;
 import br.com.communicart.backendserver.model.dto.CreateVagaDto;
+import br.com.communicart.backendserver.model.dto.PerfilResponseDTO;
 import br.com.communicart.backendserver.model.dto.VagaResponseDto;
 import br.com.communicart.backendserver.model.entity.ContactFormsAvailableForJob;
 import br.com.communicart.backendserver.model.entity.Perfil;
@@ -92,13 +93,6 @@ public class VagaService {
 	public VagaResponseDto toVagaResponseDto(Vaga vaga) {
 		String jobOwner;
 		
-		
-		
-//		if (vaga.getPerfil().getPF() != null) {
-//			jobOwner = vaga.getPerfil().getPF().getNomeCompleto();
-//		} else {
-//			jobOwner = vaga.getPerfil().getPJ().getNomeFantasia();
-//		}
 		if (vaga.getPerfil().getPF() != null) {
 			jobOwner = vaga.getPerfil().getPF().getNomeCompleto();
 		} else if (vaga.getPerfil().getPJ() != null) {
@@ -106,7 +100,6 @@ public class VagaService {
 		} else {
 			jobOwner = "";
 		}
-
 		
 		String dateString;
 		
@@ -117,6 +110,16 @@ public class VagaService {
 			dateString = null;
 		}
 		
+		String email = null;
+		PerfilResponseDTO freelancer = null;
+		
+		if (vaga.getSelectedFreelancer() != null) {
+			email = vaga.getPerfil().getUsuario().getEmail();
+			System.out.println(email);
+			freelancer = this.perfilService.toPerfilDto(vaga.getSelectedFreelancer());
+			freelancer.setId(vaga.getSelectedFreelancer().getId());
+		}
+				
 		
 		return VagaResponseDto.builder()
 			.id(vaga.getId())
@@ -132,7 +135,8 @@ public class VagaService {
 			.contactForms(vaga.getContactForms())
 			.statusVaga(vaga.getStatusVaga())
 			.fileURL(vaga.getFileURL())
-			.selectedFreelancer(vaga.getSelectedFreelancer())
+			.selectedFreelancer(freelancer)
+			.email(email)
 			.build();
 	}
 }
